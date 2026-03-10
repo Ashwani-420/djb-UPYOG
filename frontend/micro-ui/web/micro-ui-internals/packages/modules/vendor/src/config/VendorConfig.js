@@ -166,7 +166,7 @@ const VendorConfig = (t, disabled = false) => {
         },
 
         //for city and locality
-        
+
         {
           route: "address",
           component: "VendorSelectAddress",
@@ -194,6 +194,7 @@ const VendorConfig = (t, disabled = false) => {
         },
       ],
     },
+
     {
       head: "",
       body: [

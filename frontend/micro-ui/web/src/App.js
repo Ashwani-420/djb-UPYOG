@@ -1,9 +1,6 @@
 import React from "react";
 
-import {
-  initPGRComponents,
-  PGRReducers,
-} from "@djb25/digit-ui-module-pgr";
+import { initPGRComponents, PGRReducers } from "@djb25/digit-ui-module-pgr";
 import { initFSMComponents } from "@djb25/digit-ui-module-fsm";
 import { FinanceModule } from "@djb25/digit-ui-module-finance";
 // import {
@@ -25,6 +22,11 @@ import {
 import { DigitUI } from "@djb25/digit-ui-module-core";
 import { initLibraries } from "@djb25/digit-ui-libraries";
 import { HRMSModule, initHRMSComponents } from "@djb25/digit-ui-module-hrms";
+// import { initFormioComponents } from "@djb25/digit-ui-module-formio";
+// import { FormioModule } from "@djb25/digit-ui-module-formio";
+import { initEkycComponents } from "@djb25/digit-ui-module-ekyc";
+import { EkycModule } from "@djb25/digit-ui-module-ekyc";
+
 // import {
 //   TLModule,
 //   TLLinks,
@@ -37,7 +39,7 @@ import {
 // import { initOBPSComponents } from "@djb25/digit-ui-module-obps";
 // import { initNOCComponents } from "@djb25/digit-ui-module-noc";
 import { initEngagementComponents } from "@djb25/digit-ui-module-engagement";
-// import { initWSComponents } from "@djb25/digit-ui-module-ws";
+import { initWSComponents } from "@djb25/digit-ui-module-ws";
 import { initFinanceComponents } from "@djb25/digit-ui-module-finance";
 // import { initCustomisationComponents } from "./Customisations";
 import { initCommonPTComponents } from "@djb25/digit-ui-module-commonpt";
@@ -88,13 +90,15 @@ const enabledModules = [
   "MCollect",
   "HRMS",
   // "TL",
+  // "FORMIO",
+  "EKYC",
   "Receipts",
   // "OBPS",
   // "NOC",
   "Engagement",
   "Finance",
   "CommonPT",
-  // "WS",
+  "WS",
   "Reports",
   "Bills",
   // "SW",
@@ -125,6 +129,8 @@ window.Digit.ComponentRegistryService.setupRegistry({
   FinanceModule,
   // TLModule,
   // TLLinks,
+  // FormioModule,
+  EkycModule,
   ReceiptsModule,
   // PTRModule,
   // PTRLinks,
@@ -158,11 +164,13 @@ initDSSComponents();
 initMCollectComponents();
 initHRMSComponents();
 // initTLComponents();
+// initFormioComponents();
+initEkycComponents();
 initReceiptsComponents();
 // initOBPSComponents();
 // initNOCComponents();
 initEngagementComponents();
-// initWSComponents();
+initWSComponents();
 initCommonPTComponents();
 initBillsComponents();
 initFinanceComponents();

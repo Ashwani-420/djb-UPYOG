@@ -13,8 +13,9 @@ import getStore from "./redux/store";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import EmployeeDashboard from "./components/EmployeeDashboard";
 import { useState } from "react";
-import EDCRAcknowledgement from "./pages/citizen/Home/EDCR/EDCRAcknowledgement"
+import EDCRAcknowledgement from "./pages/citizen/Home/EDCR/EDCRAcknowledgement";
 import CreateAnonymousEDCR from "./pages/citizen/Home/EDCR";
+
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers }) => {
   const { isLoading, data: initData } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
@@ -64,7 +65,16 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers })
 
   return (
     <div>
-      <ErrorBoundary>
+      <ErrorBoundary
+        goToHome={() => {
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            const path = Digit.UserService.getType() === "employee" ? "/digit-ui/employee" : "/digit-ui/citizen";
+            window.location.href = path;
+          }
+        }}
+      >
         <QueryClientProvider client={queryClient}>
           <ComponentProvider.Provider value={registry}>
             <PrivacyProvider.Provider

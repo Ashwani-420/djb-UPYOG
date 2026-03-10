@@ -28,7 +28,6 @@
 @import "./components/inputotp.scss";
 @import "./components/map.scss";
 @import "./pages/employee/tooltip.scss";
-@import "./components/menu.scss";
 @import "./components/submiterrors.scss";
 @import "./components/ratingstar.scss";
 @import "./components/keynote.scss";
@@ -83,7 +82,6 @@
 @import "./components/toggleSwitch.scss";
 @import "./components/plusMinus.scss";
 @import "./components/financeUi.scss";
-@import "./components/landingpage.scss";
 
 @import "./pages/employee/index.scss";
 @import "./pages/employee/cardfix.scss";
@@ -91,6 +89,7 @@
 @import "./pages/employee/container.scss";
 @import "./pages/employee/inbox.scss";
 @import "./pages/employee/response.scss";
+@import "./pages/employee/ekyc.scss";
 @import "./pages/employee/form-fields.scss";
 @import "./pages/employee/scroll-table.scss";
 @import "./pages/employee/EmployeeLogin.scss";
@@ -115,6 +114,7 @@
 @import "./components//sidebar.scss";
 @import "./components/moduleHeader.scss";
 @import "./components/VerticalTimeline.scss";
+@import "./components/juridictions.scss";
 
 .display-none {
   display: none;
@@ -192,13 +192,6 @@ h6 {
 
 .mbsm {
   @apply mb-sm;
-}
-
-.employeeCard {
-  /*  TODO need to revisit that we need mx-md NABEEL/ANIL
-   @apply mb-md mx-md !important;
-  */
-  @apply mb-md !important;
 }
 
 .home-link {
@@ -541,6 +534,17 @@ input[type="number"] {
   @apply flex;
 }
 
+.form-search-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  overflow-x: scroll;
+  border-radius: 6px;
+}
 .inbox-search-container {
   .result {
     @apply mt-lg;
@@ -633,7 +637,8 @@ input[type="number"] {
   }
 }
 
-.applications-list-container {}
+.applications-list-container {
+}
 
 .complaint-summary {
   @media (min-width: 780px) {
@@ -663,7 +668,6 @@ input[type="number"] {
 }
 
 @media (min-width: 780px) {
-
   .citizen-obps-wrapper,
   .pgr-citizen-wrapper,
   .pt-citizen,
@@ -690,15 +694,22 @@ input[type="number"] {
 }
 
 @media only screen and (max-width: 768px) {
-
   /* For mobile phones: */
   .error-boundary {
     height: 75vh;
   }
 }
 
+.app-wrapper {
+  width: 100%;
+  flex: 1;
+  min-width: 0;
+  overflow-y: scroll;
+}
+
 .employee-app-wrapper {
   min-height: calc(100vh - 8em);
+  height: calc(100vh - 105px);
 }
 
 .ws-custom-wrapper {
@@ -808,4 +819,26 @@ input[type="number"] {
   margin-right: -27%;
   max-height: 120px;
   margin-top: 90px;
+}
+
+.flex-box {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.flex-box-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.bc-white {
+  background-color: #fff;
+}
+
+.round-medium {
+  border-radius: 6px;
 }

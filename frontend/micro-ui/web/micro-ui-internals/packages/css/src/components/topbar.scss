@@ -2,24 +2,36 @@
   position: fixed;
   top: 0;
   width: 100%;
-  padding: 10px 24px;
+  padding: 10px 58px;
   background: white;
   box-shadow: rgba(0, 0, 0, 0.24) 0 1px 4px;
   z-index: 9999999;
   @apply flex items-center;
 
+  .topbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
   img {
     display: inline;
 
     &.city {
-      margin-right: 8px;
       height: 60px;
+    }
+
+    &.spect-icon {
+      width: auto;
+      padding-right: 20px;
+      max-height: 50px;
     }
 
     &.state {
       height: 50px;
+      max-height: 20px;
       width: auto;
-      object-fit: contain;
     }
   }
 
@@ -30,7 +42,6 @@
 
   .right {
     float: right;
-    margin-top: 12px;
     position: relative;
 
     svg {
@@ -38,13 +49,14 @@
     }
 
     .user-img-txt {
-      background: #a82227;
+      background: theme(colors.primary.main);
       padding: 10px 15px;
       border-radius: 2px;
       color: white;
       height: 43px;
       width: 43px;
       font-weight: 700;
+      text-align: center;
     }
   }
 

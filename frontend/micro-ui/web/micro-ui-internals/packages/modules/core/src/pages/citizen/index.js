@@ -1,7 +1,15 @@
-import { BackButton, WhatsappIcon, Card, CitizenHomeCard, CitizenInfoLabel, PrivateRoute,AdvertisementModuleCard } from "@djb25/digit-ui-react-components";
-import React from "react";
+import {
+  BackButton,
+  WhatsappIcon,
+  Card,
+  CitizenHomeCard,
+  CitizenInfoLabel,
+  PrivateRoute,
+  AdvertisementModuleCard,
+} from "@djb25/digit-ui-react-components";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useRouteMatch, useHistory, Link } from "react-router-dom";
+import { Route, Switch, useRouteMatch, useHistory } from "react-router-dom";
 import ErrorBoundary from "../../components/ErrorBoundaries";
 import { AppHome, processLinkData } from "../../components/Home";
 import TopBarSideBar from "../../components/TopBarSideBar";
@@ -22,19 +30,19 @@ import QRCode from "./QRCode";
 import VSearchCertificate from "./CMSearchCertificate";
 import AssetsQRCode from "./AssetsQRCode";
 import ChallanQRCode from "./ChallanQRCode";
-import EDCRScrutiny from "./Home/EdcrScrutiny";
+// import EDCRScrutiny from "./Home/EdcrScrutiny";
 import { newConfig as newConfigEDCR } from "../../config/edcrConfig";
 import CreateAnonymousEDCR from "./Home/EDCR";
 import EDCRAcknowledgement from "./Home/EDCR/EDCRAcknowledgement";
+import { APPLICATION_PATH } from "./Home/EDCR/utils";
 const sidebarHiddenFor = [
   "digit-ui/citizen/register/name",
   "/digit-ui/citizen/select-language",
   "/digit-ui/citizen/select-location",
   "/digit-ui/citizen/login",
   "/digit-ui/citizen/register/otp",
-  "/digit-ui/citizen/verificationsearch-home" // route for verificationsearch component
+  "/digit-ui/citizen/verificationsearch-home", // route for verificationsearch component
 ];
-import { APPLICATION_PATH } from "./Home/EDCR/utils";
 const getTenants = (codes, tenants) => {
   return tenants.filter((tenant) => codes.map((item) => item.code).includes(tenant.code));
 };
@@ -81,8 +89,14 @@ const Home = ({
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   sourceUrl = "https://s3.ap-south-1.amazonaws.com/egov-qa-assets";
-  const pdfUrl = "https://pg-egov-assets.s3.ap-south-1.amazonaws.com/Upyog+Code+and+Copyright+License_v1.pdf"
+  const pdfUrl = "https://pg-egov-assets.s3.ap-south-1.amazonaws.com/Upyog+Code+and+Copyright+License_v1.pdf";
   const history = useHistory();
+  useEffect(() => {
+    const userType = userDetails?.info?.type?.toUpperCase();
+    if (userType === "EMPLOYEE") {
+      history.push("/digit-ui/employee");
+    }
+  }, [userDetails, history]);
   const handleClickOnWhatsApp = (obj) => {
     window.open(obj);
   };
@@ -101,24 +115,34 @@ const Home = ({
       </Route>
     ) : null;
   });
-  // Fetches advertisement details (e.g., image, title, location, pole number, price) 
+  // Fetches advertisement details (e.g., image, title, location, pole number, price)
   // from the MDMS and formats them for display on the homepage.
   const { data: advertisement } = Digit.Hooks.useCustomMDMS(Digit.ULBService.getStateId(), "Advertisement", [{ name: "Unipole_12_8" }], {
     select: (data) => {
       const formattedData = data?.["Advertisement"]?.["Unipole_12_8"].map((details) => {
-        return { imageSrc: `${details.imageSrc}`, light: `${details.light}`, title: `${details.title}`, location: `${details.location}`, poleNo:`${details.poleNo}`,price:`${details.price}`,adtype:`${details.adtype}`,faceArea:`${details.faceArea}` };
+        return {
+          imageSrc: `${details.imageSrc}`,
+          light: `${details.light}`,
+          title: `${details.title}`,
+          location: `${details.location}`,
+          poleNo: `${details.poleNo}`,
+          price: `${details.price}`,
+          adtype: `${details.adtype}`,
+          faceArea: `${details.faceArea}`,
+        };
       });
       return formattedData;
     },
   });
-  const Advertisement=advertisement||[];
+  const Advertisement = advertisement || [];
 
   const ModuleLevelLinkHomePages = modules.map(({ code, bannerImage }, index) => {
     let Links = Digit.ComponentRegistryService.getComponent(`${code}Links`) || (() => <React.Fragment />);
     let mdmsDataObj = isLinkDataFetched ? processLinkData(linkData, code, t) : undefined;
 
     //if (mdmsDataObj?.header === "ACTION_TEST_WS") {
-      mdmsDataObj?.links && mdmsDataObj?.links.sort((a, b) => {
+    mdmsDataObj?.links &&
+      mdmsDataObj?.links.sort((a, b) => {
         return a.orderNumber - b.orderNumber;
       });
     // }
@@ -126,9 +150,25 @@ const Home = ({
       <React.Fragment>
         <Route key={index} path={`${path}/${code.toLowerCase()}-home`}>
           <div className="moduleLinkHomePage">
-            <img src={ "https://nugp-assets.s3.ap-south-1.amazonaws.com/nugp+asset/Banner+UPYOG+%281920x500%29B+%282%29.jpg"||bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
+            <img src={stateInfo?.bannerUrl} alt="noimagefound" />
             <BackButton className="moduleLinkHomePageBackButton" />
-           {isMobile? <h4 style={{top: "calc(16vw + 40px)",left:"1.5rem",position:"absolute",color:"white", width:"50px", fontSize:"15px",marginTop:"6px"}}>{t("MODULE_" + code.toUpperCase())}</h4>:<h1 style={{width:"230px", marginTop:"15px"}}>{t("MODULE_" + code.toUpperCase())}</h1>}
+            {isMobile ? (
+              <h4
+                style={{
+                  top: "calc(16vw + 40px)",
+                  left: "1.5rem",
+                  position: "absolute",
+                  color: "white",
+                  width: "50px",
+                  fontSize: "15px",
+                  marginTop: "6px",
+                }}
+              >
+                {t("MODULE_" + code.toUpperCase())}
+              </h4>
+            ) : (
+              <h1 style={{ width: "230px", marginTop: "15px" }}>{t("MODULE_" + code.toUpperCase())}</h1>
+            )}
             <div className="moduleLinkHomePageModuleLinks">
               {mdmsDataObj && (
                 <CitizenHomeCard
@@ -151,24 +191,24 @@ const Home = ({
               )}
               {/* <Links key={index} matchPath={`/digit-ui/citizen/${code.toLowerCase()}`} userType={"citizen"} /> */}
             </div>
-            {code?.toUpperCase()==="ADS" && (
+            {code?.toUpperCase() === "ADS" && (
               <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between" }}>
-              {Advertisement.map((ad) => (
-                <AdvertisementModuleCard
-                  imageSrc={ad.imageSrc} 
-                  poleNo={ad.poleNo} 
-                  light={ad.light} 
-                  title={ad.title} 
-                  location={ad.location} 
-                  price={ad.price} 
-                  path={`${path}/${code.toLowerCase()}/`}
-                  adType={ad.adtype}
-                  faceArea={ad.faceArea}
-                />
-              ))}
-            </div>
+                {Advertisement.map((ad) => (
+                  <AdvertisementModuleCard
+                    imageSrc={ad.imageSrc}
+                    poleNo={ad.poleNo}
+                    light={ad.light}
+                    title={ad.title}
+                    location={ad.location}
+                    price={ad.price}
+                    path={`${path}/${code.toLowerCase()}/`}
+                    adType={ad.adtype}
+                    faceArea={ad.faceArea}
+                  />
+                ))}
+              </div>
             )}
-            <StaticDynamicCard moduleCode={code?.toUpperCase()}/>
+            <StaticDynamicCard moduleCode={code?.toUpperCase()} />
           </div>
         </Route>
         <Route key={"faq" + index} path={`${path}/${code.toLowerCase()}-faq`}>
@@ -250,7 +290,7 @@ const Home = ({
           </PrivateRoute>
 
           <Route path={`${path}/Audit`}>
-            <Search/>
+            <Search />
           </Route>
           <Route path={`${path}/payment/verification`}>
             <QRCode></QRCode>
@@ -259,10 +299,10 @@ const Home = ({
             <AssetsQRCode></AssetsQRCode>
           </Route>
           <Route path={`${path}/verificationsearch-home`}>
-            <VSearchCertificate/>
+            <VSearchCertificate />
           </Route>
           <Route path={`${path}/challan/details`}>
-         <ChallanQRCode></ChallanQRCode>
+            <ChallanQRCode></ChallanQRCode>
           </Route>
           <Route path={`${APPLICATION_PATH}/citizen/core/edcr/scrutiny`}>
             {/* <EDCRScrutiny config={newConfigEDCR} isSubmitBtnDisable={false}/> */}
@@ -279,16 +319,28 @@ const Home = ({
         </Switch>
       </div>
 
-      <div style={{ width: '100%', position: 'fixed', bottom: 0,backgroundColor:"white",textAlign:"center" }}>
-        <div style={{ display: 'flex', justifyContent: 'center', color:"black" }}>
+      <div style={{ width: "100%", height: "25px", position: "fixed", bottom: 0, backgroundColor: "white", textAlign: "center" }}>
+        <div style={{ display: "flex", justifyContent: "center", color: "black" }}>
           {/* <span style={{ cursor: "pointer", fontSize: window.Digit.Utils.browser.isMobile()?"12px":"14px", fontWeight: "400"}} onClick={() => { window.open('https://www.digit.org/', '_blank').focus();}} >Powered by DIGIT</span>
           <span style={{ margin: "0 10px" ,fontSize: window.Digit.Utils.browser.isMobile()?"12px":"14px"}}>|</span> */}
-          <a style={{ cursor: "pointer", fontSize: window.Digit.Utils.browser.isMobile()?"12px":"14px", fontWeight: "400"}} href="#" target='_blank'>UPYOG License</a>
+          {/* <a style={{ cursor: "pointer", fontSize: window.Digit.Utils.browser.isMobile() ? "12px" : "14px", fontWeight: "400" }} href="#" target='_blank'>UPYOG License</a> */}
 
-          <span  className="upyog-copyright-footer" style={{ margin: "0 10px",fontSize: window.Digit.Utils.browser.isMobile()?"12px":"14px" }} >|</span>
-          <span  className="upyog-copyright-footer" style={{ cursor: "pointer", fontSize: window.Digit.Utils.browser.isMobile()?"12px":"14px", fontWeight: "400"}} onClick={() => { window.open('https://mcdonline.nic.in/', '_blank').focus();}} >Copyright © 2025 Municipal Corporation of Delhi</span>
-          <span  className="upyog-copyright-footer" style={{ margin: "0 10px",fontSize: window.Digit.Utils.browser.isMobile()?"12px":"14px" }} >|</span>
-          <span  className="upyog-copyright-footer" style={{ cursor: "pointer", fontSize: window.Digit.Utils.browser.isMobile() ? "12px" : "14px", fontWeight: "400" }}
+          {/* <span className="upyog-copyright-footer" style={{ margin: "0 10px", fontSize: window.Digit.Utils.browser.isMobile() ? "12px" : "14px" }} >|</span> */}
+          <span
+            className="upyog-copyright-footer"
+            style={{ cursor: "pointer", fontSize: window.Digit.Utils.browser.isMobile() ? "12px" : "14px", fontWeight: "500" }}
+            onClick={() => {
+              window.open("https://delhijalboard.delhi.gov.in/", "_blank").focus();
+            }}
+          >
+            Copyright © 2026 Delhi Jal Board
+          </span>
+          <span className="upyog-copyright-footer" style={{ margin: "0 10px", fontSize: window.Digit.Utils.browser.isMobile() ? "12px" : "14px" }}>
+            |
+          </span>
+          <span
+            className="upyog-copyright-footer"
+            style={{ cursor: "pointer", fontSize: window.Digit.Utils.browser.isMobile() ? "12px" : "14px", fontWeight: "500" }}
             onClick={() => {
               window.open("https://nitcon.org/", "_blank").focus();
             }}
@@ -296,11 +348,10 @@ const Home = ({
             Designed & Developed By NITCON Ltd
           </span>
           {/* <a style={{ cursor: "pointer", fontSize: "16px", fontWeight: "400"}} href="#" target='_blank'>UPYOG License</a> */}
-
         </div>
-        <div className="upyog-copyright-footer-web">
-          <span className="" style={{ cursor: "pointer", fontSize:  window.Digit.Utils.browser.isMobile()?"12px":"14px", fontWeight: "400"}} onClick={() => { window.open('https://mcdonline.nic.in/', '_blank').focus();}} >Copyright © 2025 Municipal Corporation of Delhi</span>
-          </div>
+        {/* <div className="upyog-copyright-footer-web">
+          <span className="" style={{ cursor: "pointer", fontSize: window.Digit.Utils.browser.isMobile() ? "12px" : "14px", fontWeight: "400" }} onClick={() => { window.open('https://mcdonline.nic.in/', '_blank').focus(); }} >Copyright © 2025 Municipal Corporation of Delhi</span>
+        </div> */}
       </div>
     </div>
   );

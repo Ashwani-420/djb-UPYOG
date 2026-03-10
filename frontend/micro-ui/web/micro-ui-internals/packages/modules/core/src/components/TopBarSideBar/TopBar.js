@@ -1,6 +1,6 @@
-import { Dropdown, Hamburger, TopBar as TopBarComponent } from "@djb25/digit-ui-react-components";
 import React from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { Hamburger } from "@djb25/digit-ui-react-components";
+// import { useHistory, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
 import CustomUserDropdown from "./CustomUserDropdown";
@@ -37,6 +37,7 @@ const TopBar = ({
       }
     }, 300);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {
@@ -48,41 +49,44 @@ const TopBar = ({
       }
     }, 300);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  React.useEffect(async () => {
-    const tenant = Digit.ULBService.getCurrentTenantId();
-    const uuid = userDetails?.info?.uuid;
-    if (uuid) {
-      const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
-      if (usersResponse && usersResponse.user && usersResponse.user.length) {
-        const userDetails = usersResponse.user[0];
-        const thumbs = userDetails?.photo?.split(",");
-        setProfilePic(thumbs?.at(0));
+  React.useEffect(() => {
+    (async () => {
+      const tenant = Digit.ULBService.getCurrentTenantId();
+      const uuid = userDetails?.info?.uuid;
+      if (uuid) {
+        const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+        if (usersResponse && usersResponse.user && usersResponse.user.length) {
+          const userDetails = usersResponse.user[0];
+          const thumbs = userDetails?.photo?.split(",");
+          setProfilePic(thumbs?.at(0));
+        }
       }
-    }
+    })();
   }, [profilePic !== null, userDetails?.info?.uuid]);
 
-  const CitizenHomePageTenantId = Digit.ULBService.getCitizenCurrentTenant(true);
+  // const CitizenHomePageTenantId = Digit.ULBService.getCitizenCurrentTenant(true);
 
-  let history = useHistory();
-  const { pathname } = useLocation();
+  // let history = useHistory();
+  // const { pathname } = useLocation();
 
-  const conditionsToDisableNotificationCountTrigger = () => {
-    if (Digit.UserService?.getUser()?.info?.type === "EMPLOYEE") return false;
-    if (Digit.UserService?.getUser()?.info?.type === "CITIZEN") {
-      if (!CitizenHomePageTenantId) return false;
-      else return true;
-    }
-    return false;
-  };
+  // const conditionsToDisableNotificationCountTrigger = () => {
+  //   if (Digit.UserService?.getUser()?.info?.type === "EMPLOYEE") return false;
+  //   if (Digit.UserService?.getUser()?.info?.type === "CITIZEN") {
+  //     if (!CitizenHomePageTenantId) return false;
+  //     else return true;
+  //   }
+  //   return false;
+  // };
 
-  const { data: { unreadCount: unreadNotificationCount } = {}, isSuccess: notificationCountLoaded } = Digit.Hooks.useNotificationCount({
-    tenantId: CitizenHomePageTenantId,
-    config: {
-      enabled: conditionsToDisableNotificationCountTrigger(),
-    },
-  });
+  // const { data: { unreadCount: unreadNotificationCount } = {}, isSuccess: notificationCountLoaded } = Digit.Hooks.useNotificationCount({
+  //   tenantId: CitizenHomePageTenantId,
+  //   config: {
+  //     enabled: conditionsToDisableNotificationCountTrigger(),
+  //   },
+  // });
 
   const updateSidebar = () => {
     if (!Digit.clikOusideFired) {
@@ -93,14 +97,12 @@ const TopBar = ({
     }
   };
 
-  function onNotificationIconClick() {
-    history.push("/digit-ui/citizen/engagement/notifications");
-  }
+  // function onNotificationIconClick() {
+  //   history.push("/digit-ui/citizen/engagement/notifications");
+  // }
 
-  const urlsToDisableNotificationIcon = (pathname) =>
-    !!Digit.UserService?.getUser()?.access_token
-      ? false
-      : ["/digit-ui/citizen/select-language", "/digit-ui/citizen/select-location"].includes(pathname);
+  // const urlsToDisableNotificationIcon = (pathname) =>
+  //   !!window.keycloak?.token ? false : ["/digit-ui/citizen/select-language", "/digit-ui/citizen/select-location"].includes(pathname);
 
   if (CITIZEN) {
     const loggedIn = userDetails?.access_token ? true : false;
@@ -111,6 +113,7 @@ const TopBar = ({
           <img
             className="city"
             src="https://objectstorage.ap-hyderabad-1.oraclecloud.com/n/axn3czn1s06y/b/djb-dev-asset-bucket/o/DJB_integrated_logo_without_bg_dark.png"
+            alt="DJB LOGO"
           />
 
           {!mobileView && (
@@ -124,7 +127,7 @@ const TopBar = ({
                     userOptions={userOptions}
                     roleOptions={[]}
                     selectedRole={null}
-                    handleRoleChange={() => { }}
+                    handleRoleChange={() => {}}
                     profilePic={profilePic}
                     userName={userDetails?.info?.name || userDetails?.info?.userInfo?.name || "Citizen"}
                     t={t}
@@ -132,21 +135,27 @@ const TopBar = ({
                 </div>
               )}
 
-              <img className="state" src="https://objectstorage.ap-hyderabad-1.oraclecloud.com/n/axn3czn1s06y/b/djb-dev-asset-bucket/o/SBM_IMG.png" />
+              <img
+                className="state"
+                src="https://objectstorage.ap-hyderabad-1.oraclecloud.com/n/axn3czn1s06y/b/djb-dev-asset-bucket/o/SBM_IMG.png"
+                alt="SBM Img"
+              />
             </div>
           )}
         </span>
       </div>
     );
   }
-  const loggedin = userDetails?.access_token ? true : false;
+  const loggedin = window.keycloak?.token ? true : false;
+
   return (
     <div className="topbar">
       {mobileView ? <Hamburger handleClick={toggleSidebar} color="#9E9E9E" /> : null}
-      <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", marginRight:"40px", marginLeft:"-20px" }}>
+      <span className="topbar-content">
         <img
           className="city"
           src="https://objectstorage.ap-hyderabad-1.oraclecloud.com/n/axn3czn1s06y/b/djb-dev-asset-bucket/o/DJB_integrated_logo_without_bg_dark.png"
+          alt="DJB LOGO"
         />
 
         {!loggedin && (
@@ -178,7 +187,11 @@ const TopBar = ({
                 />
               </div>
             )}
-            <img className="state" src="https://objectstorage.ap-hyderabad-1.oraclecloud.com/n/axn3czn1s06y/b/djb-dev-asset-bucket/o/SBM_IMG.png" />
+            <img
+              className="spect-icon"
+              src="https://objectstorage.ap-hyderabad-1.oraclecloud.com/n/axn3czn1s06y/b/djb-dev-asset-bucket/o/SBM_IMG.png"
+              alt="Swatch Bharat Icon"
+            />
           </div>
         )}
       </span>

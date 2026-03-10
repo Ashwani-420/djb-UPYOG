@@ -1,11 +1,17 @@
 const { series, src, dest, watch } = require("gulp");
 const clean = require("gulp-clean");
 const postcss = require("gulp-postcss");
+const sass = require("gulp-sass");
+const postcssPresetEnv = require("postcss-preset-env");
 const cleanCSS = require("gulp-clean-css");
 const rename = require("gulp-rename");
 const livereload = require("gulp-livereload");
+const touch = require("gulp-touch-fd");
 
 let output = "./dist";
+if (true) {
+  output = "./dist";
+}
 
 function cleanStyles() {
   return src(`${output}/*.css`, { read: false }).pipe(clean());
@@ -27,21 +33,38 @@ function styles() {
   return src("src/index.scss")
     .pipe(postcss(plugins)) // Tailwind+Apply+Theme → CSS
     .pipe(rename("index.css"))
-    .pipe(dest(output));
+    .pipe(dest(output))
+    .pipe(touch());
 }
 
 function minify() {
-  return src(`${output}/index.css`)
-    .pipe(cleanCSS())
-    .pipe(rename("index.min.css"))
-    .pipe(dest(output));
+  return src(`${output}/index.css`).pipe(cleanCSS()).pipe(rename("index.min.css")).pipe(dest(output));
+}
+
+// function stylesLive() {
+//   styles().pipe(livereload({ start: true }));
+// }
+
+function stylesLive() {
+  return styles().pipe(livereload());
 }
 
 function livereloadStyles() {
   livereload.listen();
-  watch("src/**/*.scss", series(styles));
+  watch("src/**/*.scss", stylesLive);
 }
 
-exports.build = series(cleanStyles, styles, minify);
-exports.default = series(styles, minify);
+// function livereloadStyles() {
+//   livereload.listen();
+//   watch("src/**/*.scss", series(stylesLive));
+// }
+
+exports.styles = styles;
+
+exports.default = series(styles);
 exports.watch = livereloadStyles;
+if (true) {
+  exports.build = series(cleanStyles, styles, minify);
+} else {
+  exports.build = series(styles, livereloadStyles);
+}

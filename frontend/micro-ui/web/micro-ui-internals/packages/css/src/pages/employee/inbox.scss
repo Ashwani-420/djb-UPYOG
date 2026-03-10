@@ -2,12 +2,15 @@
   /*  @apply bg-white; */
   /* border-radius: 4px; */
 
+  padding: 8px;
   .header {
     /* @apply flex items-center border-b border-border justify-between; */
-
+    display: flex;
     .logo {
-      width: 56px;
-      height: 56px;
+      display: flex;
+      align-items: center;
+      width: auto;
+      aspect-ratio: 1/1;
       @apply bg-focus;
       padding: 0px;
       border-radius: 4px;
@@ -34,7 +37,7 @@
 
       a {
         color: inherit;
-        text-decoration: inherit
+        text-decoration: inherit;
       }
     }
 
@@ -99,6 +102,7 @@
 
 .filter-form {
   .filter-card {
+    border-radius: 6px;
     @apply bg-white min-h-full;
     padding: 10px;
 
@@ -134,9 +138,11 @@
 }
 
 .inbox-container {
+  gap: 16px;
   .filters-container {
     .filter {
       .filter-card {
+        border-radius: 6px;
         @apply bg-white;
         padding: 10px;
 
@@ -187,8 +193,6 @@
             }
           }
         }
-
-        .mobile-input {}
       }
     }
   }
@@ -223,7 +227,7 @@
 
     .header {
       /* @apply flex items-center border-b border-border; */
-
+      display: flex;
       .logo {
         @apply bg-focus;
         padding: 0px;
@@ -249,15 +253,18 @@
 
   .inboxLinks {
     margin: 0 !important;
-    padding: 0 !important;
-
+    padding: 8px !important;
+    background: #fff;
+    border-radius: 6px;
     .header {
+      display: flex;
       border: none;
       @apply justify-start;
-
+      align-items: center;
       .logo {
         @apply bg-white;
-
+        display: flex;
+        align-items: center;
         svg {
           path {
             fill: theme(colors.primary.main);
@@ -316,6 +323,7 @@
       width: 874px;
 
       .search-complaint-container {
+        border-radius: 6px;
         width: 100%;
         margin: auto;
         @apply flex flex-col items-start mb-md bg-white p-md;
@@ -399,10 +407,6 @@
               }
             }
           }
-
-          .mobile-input {
-            @apply ml-sm;
-          }
         }
 
         .search-action-wrapper {
@@ -417,8 +421,6 @@
           }
         }
       }
-
-      .search-complaint-container-for-search {}
     }
   }
 }
