@@ -415,8 +415,7 @@ const fsm = {
   useDriverDetails,
   useVehicleTripCreate,
   useVendorSearch,
-  useAdvanceBalanceCalulation,
-  useRouteSubscription
+  useAdvanceBalanceCalulation
 };
 const ptr = {
   usePetMDMS,
