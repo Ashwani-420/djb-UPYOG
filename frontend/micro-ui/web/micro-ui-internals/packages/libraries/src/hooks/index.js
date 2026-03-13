@@ -339,6 +339,7 @@ import useWTApplicationAction from "./wt/useWTApplicationAction";
 import useWTApplicationDetail from "./wt/useWTApplicationDetail";
 import useMTApplicationDetail from "./wt/useMTApplicationDetail";
 import useMTApplicationAction from "./wt/useMTApplicationAction";
+import useMDMS from "./wt/useMDMS";
 import useTenantsVENDOR from "./vendor/useTenants";
 import useEmpvendorCreate from "./vendor/useEmpvendorCreate";
 import useEmpvendorSearch from "./vendor/useEmpvendorSearch";
@@ -346,7 +347,7 @@ import useSelectedMDMS from "./useSelectedMDMS";
 import useVendorAdditionaldetailsAPI from "./vendor/useVendorAdditionaldetailsAPI";
 import useCreateDemand from "./sv/useCreateDemand";
 import useEmpvendorCommonSearch from "./vendor/useEmpvendorCommonSearch";
-import { useGetConnection, useValidateUser } from "./ekyc/useEkyc";
+import { useGetConnection, useValidateUser, useGetConnectionTypeV2, useGetUserType, useGetFloorCount, useGetPropertyType } from "./ekyc/useEkyc";
 
 const wt={
   useTankerCreateAPI,
@@ -356,7 +357,8 @@ const wt={
   useMobileToiletCreateAPI,
   useMobileToiletSearchAPI,
   useMTApplicationDetail,
-  useMTApplicationAction
+  useMTApplicationAction,
+  useMDMS
 };
 
 const pgr = {
@@ -431,7 +433,7 @@ const ptr = {
   usePetDocumentSearch,
   useMyPetPayments,
   useTenants: useTenantsPTR
- 
+
 };
 
 const pt = {
@@ -487,6 +489,10 @@ const mcollect = {
 const ekyc = {
   useGetConnection,
   useValidateUser,
+  useGetPropertyType,
+  useGetConnectionTypeV2,
+  useGetUserType,
+  useGetFloorCount
 };
 
 const hrms = {
@@ -697,7 +703,7 @@ const ads={
   useADSSlotSearch,
   useADSSearch,
   useADSDemandEstimation,
-  useADSApplicationDetail  
+  useADSApplicationDetail
 }
 
 const cm = {
