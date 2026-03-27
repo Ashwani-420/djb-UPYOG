@@ -199,6 +199,14 @@
   }
 }
 
+@media (max-width: 768px) {
+  .submit-bar {
+    padding-inline: 24px;
+    border-radius: 10px;
+    box-shadow: none;
+    background: linear-gradient(278deg, rgba(110, 191, 221, 0.925) -24.44%, rgba(97, 119, 236, 0.9) 93.53%);
+  }
+}
 @screen dt {
 
   .submit-bar,
@@ -917,7 +925,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-bottom: 40px;
+  overflow-y: scroll;
 }
 
 .mobile-sidebar-toggle {
@@ -970,6 +978,7 @@
   top: 0;
   left: -100%;
   width: 80%;
+  min-width: 250px;
   max-width: 320px;
   height: 100vh;
   background-color: #ffffff;
@@ -1216,6 +1225,7 @@
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.04);
   position: relative;
   z-index: 101;
+  padding: 20px;
 }
 
 /* Width Control */
@@ -1225,6 +1235,7 @@
 
 .premium-sidebar.collapsed {
   width: var(--sidebar-collapsed);
+  padding:5px;
 }
 
 /* --- Header & Brand --- */
@@ -1414,10 +1425,52 @@
   display: none;
 }
 
-@media (max-width: 780px) {
+.module-sidebar-wrapper {
+  height: 100%;
+}
 
-  /* Toggle Button */
-  .module-sidebar-toggle {
+@media (max-width: 768px) {
+
+  /* Wrapper becomes a sticky top bar, not a flex column member */
+  .module-sidebar-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 100;
+    pointer-events: none;
+    /* Let clicks pass through when hidden */
+  }
+
+  /* Hide desktop sidebar — zero dimensions so flex row is unaffected */
+  .premium-sidebar {
+    display: none !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px !important;
+    /* Force fixed width on mobile drawer */
+    transform: translateX(-100%);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Hide old toggle + backdrop */
+  .module-sidebar-toggle,
+  .module-sidebar-backdrop,
+  .collapse-toggle {
+    display: none !important;
+  }
+
+  /* Show the horizontal scrollable tab bar */
+  .mobile-tab-bar {
     display: flex;
     position: fixed;
     top: 68px;
@@ -1459,36 +1512,13 @@
     pointer-events: none;
     transition: opacity 0.4s ease;
   }
-
-  .module-sidebar-backdrop.visible {
+  module-sidebar-wrapper .module-sidebar-backdrop.visible {
     opacity: 1;
     pointer-events: auto;
   }
 
-  /* Sidebar Wrapper & Mobile Off-canvas Drawer */
-  .module-sidebar-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    z-index: 100;
-    pointer-events: none;
-    /* Let clicks pass through when hidden */
-  }
-
   .module-sidebar-wrapper.mobile-open {
     pointer-events: auto;
-  }
-
-  .premium-sidebar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 280px !important;
-    /* Force fixed width on mobile drawer */
-    transform: translateX(-100%);
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.15);
   }
 
   .premium-sidebar.mobile-open {
@@ -1514,9 +1544,27 @@
     width: auto !important;
     margin-left: 16px !important;
   }
+
+  /* expanded page container stacks vertically */
+  .expanded-page-container {
+    flex-direction: column !important;
+    gap: 0 !important;
+    width: 100% !important;
+  }
+
+  /* expanded sidebar NOT hidden on mobile to allow hamburger menu */
+
+  /* expanded content full width */
+  .expanded-content {
+    width: 100% !important;
+    padding: 16px !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
 }
 
 @media (min-width: 768px) {
+
   .mobile-sidebar-toggle,
   .mobile-close-btn,
   .sidebar-backdrop {
@@ -1525,7 +1573,7 @@
 
   .expanded-page-container {
     flex-direction: row;
-    gap: 24px;
+    gap: 16px;
   }
 
   .expanded-sidebar {

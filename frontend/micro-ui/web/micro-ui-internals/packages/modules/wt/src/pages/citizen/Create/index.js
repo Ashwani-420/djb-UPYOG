@@ -162,15 +162,16 @@ const WTCreate = () => {
   const MTAcknowledgement = Digit?.ComponentRegistryService?.getComponent("MTAcknowledgement");
   const TPAcknowledgement = Digit?.ComponentRegistryService?.getComponent("TPAcknowledgement");
 
+  console.log(config);
   return (
     <React.Fragment>
-      <div style={{ display: "flex", width: "100%", gap: "24px" }}>
+      <div className="employee-form-section-wrapper">
         {!pathname.includes("/info") && (
-          <div style={{ flex: "0 0 280px", background: "#fff", padding: "20px 0", boxShadow: "0 2px 4px rgba(0,0,0,0.1)", borderRadius: "4px" }}>
+          <div>
             <VerticalTimeline config={config} />
           </div>
         )}
-        <div style={{ flex: "1", overflowY: "auto" }}>
+        <div className="employee-form-section">
           <Switch>
             {config.map((routeObj, index) => {
               const { component, texts, inputs, key, additionaFields } = routeObj;

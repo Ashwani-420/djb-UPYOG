@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import org.upyog.rs.config.RequestServiceConfiguration;
 import org.upyog.rs.enums.RequestServiceStatus;
 import org.upyog.rs.repository.IdGenRepository;
+import org.upyog.rs.util.IdgenUtil;
 import org.upyog.rs.util.RequestServiceUtil;
 import org.upyog.rs.util.UserUtil;
 import org.upyog.rs.web.models.Address;
@@ -20,6 +21,7 @@ import org.upyog.rs.web.models.ApplicantDetail;
 import org.upyog.rs.web.models.AuditDetails;
 import org.upyog.rs.web.models.fillingpoint.FillingPoint;
 import org.upyog.rs.web.models.fillingpoint.FillingPointRequest;
+import org.upyog.rs.web.models.fillingpointlocality.FillingPointLocalityRequest;
 import org.upyog.rs.web.models.mobileToilet.MobileToiletBookingDetail;
 import org.upyog.rs.web.models.mobileToilet.MobileToiletBookingRequest;
 import org.upyog.rs.web.models.user.AddressV2;
@@ -45,6 +47,9 @@ public class EnrichmentService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private IdgenUtil idgenUtil;
 
 	public void enrichCreateWaterTankerRequest(WaterTankerBookingRequest waterTankerRequest) {
 		String bookingId = RequestServiceUtil.getRandonUUID();
@@ -134,6 +139,12 @@ public class EnrichmentService {
 
 	// Fixed Point Request
 	public void enrichCreateFixedPointWaterTankerRequest(WaterTankerFixedPointRequest waterTankerFixedPointRequest) {
+        List<String> referenceList = idgenUtil.getIdList(
+				waterTankerFixedPointRequest.getRequestInfo(),
+				waterTankerFixedPointRequest.getWaterTankerFixedPointDetail().getTenantId(),
+                "djb.fxp.id",
+                null,
+                1);
 		String bookingId = RequestServiceUtil.getRandonUUID();
 		log.info("Enriching water tanker booking id :" + bookingId);
 
@@ -156,11 +167,9 @@ public class EnrichmentService {
 		waterTankerFixedPointDetail.setBookingId(bookingId);
 		waterTankerFixedPointDetail.getApplicantDetail().setBookingId(bookingId);
 		waterTankerFixedPointDetail.setMobileNumber(applicantDetail.getMobileNumber());
-//		waterTankerFixedPointDetail.setLocalityCode(address.getLocalityCode());
-//		waterTankerFixedPointDetail.setLatitude(address.getLatitude());
-//		waterTankerFixedPointDetail.setLongitude(address.getLongitude());
 
 		waterTankerFixedPointDetail.getApplicantDetail().setType("FIXED-POINT");
+		waterTankerFixedPointDetail.getApplicantDetail().setFixedPointId(referenceList.get(0));
 		waterTankerFixedPointDetail.getApplicantDetail().setApplicantId(RequestServiceUtil.getRandonUUID());
 		waterTankerFixedPointDetail.getAddress().setAddressId(RequestServiceUtil.getRandonUUID());
 		waterTankerFixedPointDetail.getApplicantDetail().setAuditDetails(auditDetails);
@@ -463,6 +472,14 @@ public class EnrichmentService {
 
 
 	public void enrichCreateFillingPointRequest(FillingPointRequest request) {
+
+		List<String> referenceList = idgenUtil.getIdList(
+				request.getRequestInfo(),
+				request.getFillingPoints().get(0).getTenantId(),
+				"djb.flp.id",
+				null,
+				1);
+
 		String userId = request.getRequestInfo().getUserInfo().getUuid();
 		Long now = System.currentTimeMillis();
 
@@ -472,6 +489,7 @@ public class EnrichmentService {
 			fp.setLastModifiedBy(userId);
 			fp.setCreatedTime(now);
 			fp.setLastModifiedTime(now);
+			fp.setFillingPointId(referenceList.get(0));
 
 			if (fp.getAddress() != null) {
 				fp.getAddress().setAddressId(RequestServiceUtil.getRandonUUID());
@@ -498,5 +516,32 @@ public class EnrichmentService {
 				fp.getAddress().setType("FILLING-POINT");
 			}
 		}
+	}
+
+	public void enrichCreateRequest(FillingPointLocalityRequest request) {
+		RequestInfo requestInfo = request.getRequestInfo();
+		AuditDetails auditDetails = AuditDetails.builder()
+				.createdBy(requestInfo.getUserInfo().getUuid())
+				.lastModifiedBy(requestInfo.getUserInfo().getUuid())
+				.createdTime(System.currentTimeMillis())
+				.lastModifiedTime(System.currentTimeMillis())
+				.build();
+
+		request.getFillingPointLocality().forEach(mapping -> mapping.setAuditDetails(auditDetails));
+	}
+
+	public void enrichUpdateRequest(FillingPointLocalityRequest request) {
+		Long time = System.currentTimeMillis();
+		String uuid = request.getRequestInfo().getUserInfo().getUuid();
+
+		request.getFillingPointLocality().forEach(mapping -> {
+			AuditDetails audit = mapping.getAuditDetails();
+			if(audit == null) {
+				audit = new AuditDetails();
+			}
+			audit.setLastModifiedBy(uuid);
+			audit.setLastModifiedTime(time);
+			mapping.setAuditDetails(audit);
+		});
 	}
 }
