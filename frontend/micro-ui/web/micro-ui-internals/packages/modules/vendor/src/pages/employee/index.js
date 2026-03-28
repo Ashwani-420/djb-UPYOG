@@ -136,19 +136,25 @@ const EmployeeApp = ({ path, url, userType }) => {
 
             <PrivateRoute
               path={`${path}/registry/additionaldetails`}
-              component={(props) => (
-                <LayoutWrapper layoutClass="normal">
-                  <VendorCreate {...props} parentRoute={path} />
-                </LayoutWrapper>
+              component={renderWithLayout(
+                (props) => (
+                  <LayoutWrapper layoutClass="normal">
+                    <VendorCreate {...props} parentRoute={path} />
+                  </LayoutWrapper>
+                ),
+                layouts.action
               )}
             />
 
             <PrivateRoute
               path={`${path}/registry/driver-details/:id`}
-              component={(props) => (
-                <LayoutWrapper layoutClass="action">
-                  <DriverDetails {...props} parentRoute={path} />
-                </LayoutWrapper>
+              component={renderWithLayout(
+                (props) =>
+                  (
+                    <LayoutWrapper layoutClass="action">
+                      <DriverDetails {...props} parentRoute={path} />
+                    </LayoutWrapper>
+                  ).layouts.action
               )}
             />
 
@@ -161,7 +167,6 @@ const EmployeeApp = ({ path, url, userType }) => {
               )}
             />
 
-            {/* ACTION BAR LAYOUT */}
             <PrivateRoute
               path={`${path}/registry/new-vendor`}
               component={(props) => (
@@ -196,3 +201,14 @@ const EmployeeApp = ({ path, url, userType }) => {
 };
 
 export default EmployeeApp;
+
+const renderWithLayout = (Component, layoutClass) => (routeProps) => (
+  <div className={layoutClass}>
+    <Component {...routeProps} />
+  </div>
+);
+
+const layouts = {
+  normal: "employee-form",
+  action: "employee-form employee-form-content-with-action-bar",
+};
