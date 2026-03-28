@@ -28,7 +28,6 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
     paginationParams,
     isupdate
   );
-  console.log(data, "hrms search data");
 
   useEffect(() => {
     if (res) {
