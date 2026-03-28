@@ -500,7 +500,7 @@ const FixedPointScheduleManagement = ({ ...props }) => {
               system_assigned_schedule_id: formData.scheduleId,
               fixed_point_code: formData.fixedPointCode,
               day: daysArr.map((d) => d?.toUpperCase?.() || d),
-              trip_no: formData.frequencyNo,
+              trip_no: Number(formData.frequencyNo),
               arrival_time_to_fpl: formData.arrivalTimeFpl,
               departure_time_from_fpl: formData.departureTimeFpl,
               arrival_time_delivery_point: formData.arrivalFixedPoint,

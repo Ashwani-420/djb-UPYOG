@@ -141,14 +141,15 @@ const SearchFillingPointAddress = () => {
 
   const onSearch = () => {
     const filters = {
-      name: searchValue,
-      ...(selectedTab === "FILLING_POINT" ? { mobileNo: mobileNumber } : { mobileNumber: mobileNumber }),
+      ...(selectedTab === "FILLING_POINT" ? { fillingPointName: searchValue } : { name: searchValue }),
+      mobileNumber: mobileNumber,
       status: selectedTab === "FILLING_POINT" ? status?.code : null,
     };
     setAppliedFixedPointStatus(fixedPointStatus);
     setSearchParams(filters);
     setPageOffset(0);
   };
+
 
   const onFillingPointSelect = (row, value) => {
     const payload = {
