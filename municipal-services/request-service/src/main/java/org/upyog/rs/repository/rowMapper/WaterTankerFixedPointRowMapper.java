@@ -27,9 +27,9 @@ public class WaterTankerFixedPointRowMapper
         Map<String, WaterTankerFixedPointDetail> bookingMap = new LinkedHashMap<>();
 
         while (rs.next()) {
-            String bookingId = rs.getString("booking_id");
+            String applicantId = rs.getString("applicant_id");
 
-            bookingMap.computeIfAbsent(bookingId, id -> {
+            bookingMap.computeIfAbsent(applicantId, id -> {
                 try {
                     return buildFixedPointDetail(rs);
                 } catch (SQLException e) {
@@ -37,7 +37,7 @@ public class WaterTankerFixedPointRowMapper
                 }
             });
 
-            WaterTankerFixedPointDetail detail = bookingMap.get(bookingId);
+            WaterTankerFixedPointDetail detail = bookingMap.get(applicantId);
 
             if (detail.getApplicantDetail() == null) {
                 try {
