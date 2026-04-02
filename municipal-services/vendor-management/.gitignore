@@ -1,0 +1,68 @@
+# Compiled Java class files
+*.class
+
+# Build directories (Maven, Gradle, etc.)
+target/
+build/
+out/
+
+# Logs
+*.log
+logs/
+
+# IDE configuration files (IntelliJ IDEA)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# IDE configuration files (Eclipse, Spring Tool Suite)
+.project
+.classpath
+.settings/
+.springBeans
+.sts4-cache/
+.apt_generated
+.factorypath
+
+# IDE configuration files (VS Code)
+.vscode/
+
+# OS generated files (macOS, Windows, Linux)
+.DS_Store
+Thumbs.db
+.directory
+.*.swp
+
+# Package files (usually uploaded to Nexus/Artifactory, not in Git)
+*.jar
+*.war
+*.ear
+*.zip
+*.tar
+*.tar.gz
+
+# Maven wrapper (keep maven-wrapper.jar if you commit the wrapper)
+.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle wrapper (keep the scripts and jar)
+.gradle/
+!gradle-wrapper.jar
+!gradlew
+!gradlew.bat
+
+# Temporary files
+*.tmp
+*.bak
+*.orig
+
+# JVM crash logs
+hs_err_pid*
+replay_pid*
+
+# Environment & Secrets
+# IMPORTANT: Never commit files with passwords, API keys, or tokens
+application-*.properties
+application-*.yml
+.env

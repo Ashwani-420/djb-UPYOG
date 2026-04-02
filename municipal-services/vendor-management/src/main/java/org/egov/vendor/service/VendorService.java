@@ -158,7 +158,7 @@ public class VendorService {
     public VendorWorkOrder create(VendorWorkOrderRequest request) {
 
         enrichmentService.enrichCreateRequest(request);
-
+        vendorValidator.validateVendorWorkOrderCreate(request.getVendorWorkOrder());
         producer.push(config.getSaveVendorWorkOrderTopic(), request);
 
         log.info("VendorWorkOrder pushed to Kafka. id={}",
